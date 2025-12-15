@@ -13,7 +13,7 @@ namespace EasyLog
         /// </summary>
         public enum LogLevel
         {
-            Info,
+            Success,
             Warn,
             Error
         }
@@ -30,7 +30,7 @@ namespace EasyLog
         /// </summary>
         private static readonly Dictionary<LogLevel, ConsoleColor> LogLevelAndColorMap = new Dictionary<LogLevel, ConsoleColor>
         {
-            { LogLevel.Info, ConsoleColor.Green },
+            { LogLevel.Success, ConsoleColor.Green },
             { LogLevel.Warn, ConsoleColor.Yellow },
             { LogLevel.Error, ConsoleColor.Red },
         };
@@ -116,10 +116,10 @@ namespace EasyLog
         }
 
         /// <summary>
-        /// 输出 Info 日志
+        /// 输出 Success 日志
         /// </summary>
         /// <param name="text">待输出的日志文本</param>
-        public static void Info(string text) => WriteLogCore(text, LogLevel.Info);
+        public static void Success(string text) => WriteLogCore(text, LogLevel.Success);
 
         /// <summary>
         /// 输出 Warn 日志
