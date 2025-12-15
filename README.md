@@ -1,5 +1,7 @@
 # EasyLog
 
+![我是徽章](https://img.shields.io/badge/EasyLog-v1.0.5-brightgreen)
+
 轻量级 C# 日志记录工具
 
 ## 1. 安装
