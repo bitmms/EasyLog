@@ -2,6 +2,34 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
+        <PackageId>ETool.EasyLog</PackageId>
+        <Title>轻量级 C# 日志记录工具</Title>
+        <Version>TargetVersion</Version>
+        <Authors>bitm</Authors>
+        <Description>轻量级 C# 日志记录工具</Description>
+        <Copyright>Copyright (c) 2025 bitm</Copyright>
+        <PackageProjectUrl>https://github.com/bitmms/EasyLog.git</PackageProjectUrl>
+        <PackageIcon>nuget-logo.png</PackageIcon>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl>https://github.com/bitmms/EasyLog.git</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>轻量级 日志</PackageTags>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
     </PropertyGroup>
+
+    <ItemGroup>
+      <None Include="..\nuget-logo.png">
+        <Pack>True</Pack>
+        <PackagePath>\</PackagePath>
+      </None>
+      <None Include="..\LICENSE">
+        <Pack>True</Pack>
+        <PackagePath>\</PackagePath>
+      </None>
+      <None Include="..\README.md">
+        <Pack>True</Pack>
+        <PackagePath>\</PackagePath>
+      </None>
+    </ItemGroup>
 
 </Project>

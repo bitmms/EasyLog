@@ -1,0 +1,61 @@
+# 工作流名称
+name: 基于 .NET CLI 构建打包发布 NuGet 工具包
+
+# 全局变量定义
+env:
+  PROJECT_NAME: EasyLog   # 项目名称
+  BUILD_CONFIG: Release   # 编译配置（Debug、Release）
+  ENABLE_PUBLISH: true    # 控制是否执行发布任务（true/false）
+
+# 触发条件：push 到指定分支
+on:
+  push:
+    tags:
+      - 'v*' # 匹配所有以v开头的Tag
+
+# 任务定义
+jobs:
+  build-and-publish:
+    name: 构建、发布 NuGet 包
+    runs-on: ubuntu-latest
+    steps:
+      - name: 查看 dotnet 版本
+        run: dotnet --version
+
+      - name: 拉取项目代码
+        uses: actions/checkout@v4
+
+      - name: 列出项目目录
+        run: |
+          pwd
+          ls -la
+
+      - name: 从 tag 中提取版本号
+        id: get_version
+        run: |
+          # github.ref_name 是触发流程的 Tag 名称
+          TAG_VERSION=${{ github.ref_name }}
+          # 去掉前缀v，得到纯版本号
+          CLEAN_VERSION=${TAG_VERSION#v}
+          # 将版本号输出为Actions变量，供后续步骤使用
+          echo "VERSION=$CLEAN_VERSION" >> $GITHUB_OUTPUT
+          echo "提取到的版本号：$CLEAN_VERSION"
+
+      - name: 修改版本号
+        run: |
+          grep "<Version>" ${{ env.PROJECT_NAME }}/${{ env.PROJECT_NAME }}.csproj
+          sed -i 's/TargetVersion/${{ steps.get_version.outputs.VERSION  }}/g' ${{ env.PROJECT_NAME }}/${{ env.PROJECT_NAME }}.csproj
+          grep "<Version>" ${{ env.PROJECT_NAME }}/${{ env.PROJECT_NAME }}.csproj
+
+      - name: 编译并打包项目
+        run: dotnet pack -c ${{ env.BUILD_CONFIG }}
+        continue-on-error: false
+
+      - name: 列出构建、打包产物
+        run: |
+          ls -l ${{ env.PROJECT_NAME }}/bin/${{ env.BUILD_CONFIG }}/*/
+          ls -l ${{ env.PROJECT_NAME }}/bin/${{ env.BUILD_CONFIG }}
+                
+      - name: 推送 NuGet 包
+        if: ${{ env.ENABLE_PUBLISH == 'true' }}
+        run: dotnet nuget push ${{ env.PROJECT_NAME }}/bin/${{ env.BUILD_CONFIG }}/*.nupkg --api-key ${{ secrets.NuGet_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
